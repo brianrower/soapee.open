@@ -50,7 +50,7 @@ export default function({ command, mode }) {
     server: {
       host: '0.0.0.0',
       hmr: {
-        port: 5000,
+        port: 5001,
         path: 'vite-hmr'
       }
     },
