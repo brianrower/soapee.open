@@ -1,8 +1,0 @@
-mutation updateMyAdditive($id: ID!, $input: UpdateAdditiveInput!) {
-  updateAdditive(id: $id, input: $input) {
-    id
-    name
-    notes
-    updatedAt
-  }
-}

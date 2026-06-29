@@ -1,3 +1,0 @@
-query userFriendStatus($userId: ID!) {
-  userFriendStatus(userId: $userId)
-}

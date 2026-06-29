@@ -1,7 +1,0 @@
-query additives {
-  additives {
-    id
-    name
-    notes
-  }
-}

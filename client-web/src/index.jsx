@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ApolloProvider } from '@apollo/client';
 import { Router } from 'react-router-dom';
 
-import client from 'client';
 import App from 'components/App';
 import SentryErrorBoundary from 'components/shared/SentryErrorBoundary';
 
@@ -25,12 +23,10 @@ if (window.Cypress) {
 }
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <SentryErrorBoundary>
-      <Router history={history}>
-        <App />
-      </Router>
-    </SentryErrorBoundary>
-  </ApolloProvider>,
+  <SentryErrorBoundary>
+    <Router history={history}>
+      <App />
+    </Router>
+  </SentryErrorBoundary>,
   document.getElementById('root')
 );

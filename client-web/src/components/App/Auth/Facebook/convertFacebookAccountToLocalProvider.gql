@@ -1,3 +1,0 @@
-mutation convertFacebookAccountToLocalProvider($input: ConvertFacebookAccountToLocalProviderInput!) {
-  convertFacebookAccountToLocalProvider(input: $input)
-}

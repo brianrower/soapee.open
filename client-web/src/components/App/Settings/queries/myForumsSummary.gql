@@ -1,5 +1,0 @@
-query myForumsSummary {
-  myForumsSummary {
-    count
-  }
-}

@@ -1,8 +1,0 @@
-query recipeJournals($search: RecipeJournalSearchInput!) {
-  recipeJournals(search: $search) {
-    id
-    journal
-    createdAt
-    updatedAt
-  }
-}

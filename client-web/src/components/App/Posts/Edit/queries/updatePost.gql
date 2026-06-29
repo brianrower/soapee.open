@@ -1,7 +1,0 @@
-mutation updatePost($input: PostUpdateInput!) {
-  updatePost(input: $input) {
-    id
-    content
-    lastEdited
-  }
-}

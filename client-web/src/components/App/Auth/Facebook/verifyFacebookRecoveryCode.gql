@@ -1,3 +1,0 @@
-mutation verifyFacebookRecoveryCode($input: VerifyResetCodeInput!) {
-  verifyFacebookRecoveryCode(input: $input)
-}

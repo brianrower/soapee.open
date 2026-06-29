@@ -5,15 +5,14 @@ import { Container } from 'semantic-ui-react';
 import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
 import qs from 'qs';
 
-import client from 'client';
 import useOils from 'hooks/useOils';
 import usePrint from 'hooks/usePrint';
+
+import { createRecipe } from 'services/recipesStore';
 
 import Section from 'components/shared/Section';
 import SoapCalculator from 'components/shared/SoapCalculator';
 import RecipePrint from 'components/shared/RecipeComponents/RecipePrint';
-
-import createRecipeMutation from './createRecipe.gql';
 
 export default function Calculator() {
   const { url, path } = useRouteMatch();
@@ -56,14 +55,9 @@ export default function Calculator() {
   }
 
   function saveRecipe(calcRecipe) {
-    return client
-      .mutate({
-        mutation: createRecipeMutation,
-        variables: {
-          recipe: calcRecipe
-        }
-      })
-      .then(({ data: { createRecipe } }) => history.push(`/recipes/${createRecipe.id}`));
+    const saved = createRecipe(calcRecipe);
+
+    return Promise.resolve(history.push(`/recipes/${saved.id}`));
   }
 
   //

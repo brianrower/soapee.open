@@ -1,5 +1,0 @@
-query commentableCommentsSummary($commentable: CommentableInput!) {
-  commentableCommentsSummary(commentable: $commentable) {
-    count
-  }
-}

@@ -1,7 +1,0 @@
-#import "./oilFields.gql"
-
-query oils {
-  oils {
-    ...oilFields
-  }
-}

@@ -1,5 +1,0 @@
-mutation deleteRecipe($id: ID!) {
-  deleteRecipe(id: $id) {
-    id
-  }
-}

@@ -1,7 +1,0 @@
-query forumTags($search: ForumTagsSearchInput!) {
-  forumTags(search: $search) {
-    id
-    tag
-    color
-  }
-}

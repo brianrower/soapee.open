@@ -1,5 +1,0 @@
-query myFavouriteCommentsSummary {
-  myFavouriteCommentsSummary {
-    count
-  }
-}
