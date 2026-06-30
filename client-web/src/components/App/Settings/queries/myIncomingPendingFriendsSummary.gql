@@ -1,5 +1,0 @@
-query myIncomingPendingFriendsSummary {
-  myIncomingPendingFriendsSummary {
-    count
-  }
-}

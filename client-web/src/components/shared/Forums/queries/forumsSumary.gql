@@ -1,5 +1,0 @@
-query forumsSummary($search: ForumSearchInput) {
-  forumsSummary(search: $search) {
-    count
-  }
-}

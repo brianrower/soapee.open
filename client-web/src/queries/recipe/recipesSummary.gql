@@ -1,5 +1,0 @@
-query recipesSummary($search: RecipeSearchInput) {
-  recipesSummary(search: $search) {
-    count
-  }
-}

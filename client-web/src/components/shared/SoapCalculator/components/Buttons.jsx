@@ -5,7 +5,6 @@ import { Button, Icon } from 'semantic-ui-react';
 import useMedia, { mobile } from 'hooks/useMedia';
 import noop from 'services/noop';
 
-import LoginSignupModal from 'components/shared/Modals/LoginSignup';
 import GAEventReporter from 'components/shared/GAEventReporter';
 
 
@@ -30,19 +29,17 @@ export default function Buttons({
 
   return (
     <ButtonsWrapper {...groupProps}>
-      <LoginSignupModal>
-        <Button
-          icon
-          primary
-          labelPosition="left"
-          disabled={hasErrors || submitting}
-          loading={submitting}
-          onClick={onSubmit}
-        >
-          <Icon name="save" />
-          {saveAction} Recipe
-        </Button>
-      </LoginSignupModal>
+      <Button
+        icon
+        primary
+        labelPosition="left"
+        disabled={hasErrors || submitting}
+        loading={submitting}
+        onClick={onSubmit}
+      >
+        <Icon name="save" />
+        {saveAction} Recipe
+      </Button>
 
       {canSaveAsCopy && (
         <Button

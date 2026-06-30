@@ -7,14 +7,13 @@
     "start": "concurrently vite yarn:sleep",
     "start:build:watch": "concurrently --restart-tries 5 --restart-after 5000 \"vite build --mode development --watch\" \"vite preview --port 3000\" yarn:sleep",
     "build": "vite build",
+    "build:standalone": "vite build --mode standalone && node -e \"const fs=require('fs'),p='build/assets';fs.existsSync(p)&&fs.readdirSync(p).forEach(f=>/\\.(js|css)$/.test(f)&&fs.unlinkSync(p+'/'+f))\"",
     "lint": "yarn eslint . --ext js,jsx",
     "sleep": "sleep 99999999"
   },
   "dependencies": {
-    "@apollo/client": "3.5.8",
     "@tinymce/tinymce-react": "3.3.2",
     "ahooks": "3.1.9",
-    "apollo-upload-client": "16.0.0",
     "axios": "0.19.2",
     "bluebird": "3.7.2",
     "clsx": "1.1.1",
@@ -22,8 +21,6 @@
     "debounce-promise": "3.1.2",
     "emoji-mart": "2.11.2",
     "hash-sum": "2.0.0",
-    "js-cookie": "2.2.1",
-    "jwt-decode": "2.2.0",
     "lodash": "4.17.19",
     "pluralize": "8.0.0",
     "prop-types": "15.7.2",
@@ -43,7 +40,6 @@
     "@babel/core": "7.14.8",
     "@babel/eslint-parser": "7.14.9",
     "@babel/preset-react": "7.14.5",
-    "@rollup/plugin-graphql": "1.0.0",
     "@vitejs/plugin-react": "1.1.3",
     "@vitejs/plugin-react-refresh": "1.3.6",
     "concurrently": "6.2.0",
@@ -56,13 +52,13 @@
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-react-prefer-function-component": "0.0.7",
-    "graphql": "15.5.1",
     "prop-types": "15.7.2",
     "rollup-plugin-visualizer": "5.5.2",
     "stylus": "0.55.0",
     "vite": "2.7.2",
     "vite-plugin-compression": "0.3.6",
-    "vite-plugin-html-env": "1.0.3"
+    "vite-plugin-html-env": "1.0.3",
+    "vite-plugin-singlefile": "^0.7.2"
   },
   "engines": {
     "node": ">=12 < 13"

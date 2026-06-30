@@ -1,3 +1,0 @@
-query forumExists($name: String!) {
-  forumExists(name: $name)
-}

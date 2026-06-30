@@ -1,8 +1,0 @@
-#import 'queries/recipe/recipeFields.gql'
-
-query myRecipes($search: MyRecipesSearchInput, $order: RecipeSortOrderInput, $page: PaginationInput) {
-  myRecipes(search: $search, order: $order, page: $page) {
-    ...summaryRecipeFields
-    recipeImage(type: thumb)
-  }
-}

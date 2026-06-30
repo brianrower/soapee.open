@@ -1,7 +1,0 @@
-#import "./oilFields.gql"
-
-query oil($id: ID!) {
-  oil(id: $id) {
-    ...oilFields
-  }
-}

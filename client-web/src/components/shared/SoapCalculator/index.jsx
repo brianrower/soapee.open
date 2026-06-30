@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Bluebird from 'bluebird';
 import { Form, Grid, Header, Segment } from 'semantic-ui-react';
@@ -11,11 +11,9 @@ import noop from 'services/noop';
 import { recipeSummary } from 'services/calculator';
 
 import useMyAdditives from 'hooks/useMyAdditives';
-import useCurrentUser from 'hooks/useCurrentUser';
 
 import { useForm, ErrorMessage, ErrorsSummary } from 'components/shared/Form';
 
-import LoginToCreatePostCTA from 'components/shared/LoginToCreatePostCTA';
 import AdditiveBreakdown from 'components/shared/RecipeComponents/AdditiveBreakdown';
 import OilBreakdown from 'components/shared/RecipeComponents/OilBreakdown';
 import RecipeFattyAcids from 'components/shared/RecipeComponents/RecipeFattyAcids';
@@ -36,8 +34,6 @@ import ListOilsSelector from './components/ListOilsSelector';
 import OilSuperfat from './components/OilSuperfat';
 import SoapType from './components/SoapType';
 import UnitsOfMeasure from './components/UnitsOfMeasure';
-import Visibility from './components/Visibility';
-import RecipeImage from './components/RecipeImage';
 
 import './soapCalculator.styl';
 
@@ -57,15 +53,12 @@ export default function SoapCalculator({
     onSubmit: handleFormSubmit
   });
 
-  const [imageData, setImageData] = useState({});
-
   const summary = useCreation(
     () => !(_.isEmpty(oils)) && recipeSummary(formState, oils),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [hashSum(formValuesForUseMemo()), hashSum(oils)]
   );
 
-  const currentUser = useCurrentUser();
   const [additives,, refetchAdditives] = useMyAdditives();
 
   return (
@@ -114,63 +107,39 @@ export default function SoapCalculator({
             </Grid.Column>
           </Grid.Row>
 
-          {currentUser && (
-            <Grid.Row columns={2}>
-              <Grid.Column width={8}>
-                <Header block attached="top">6 - Select Additives</Header>
-                <Segment attached>
-                  <ListAdditivesSelector
-                    additives={additives}
-                    onAddedAdditive={addAdditiveToRecipe}
-                    onRefresh={refetchAdditives}
-                  />
-                </Segment>
-              </Grid.Column>
-
-              <Grid.Column width={8}>
-                <Header block attached="top">Recipe Additives</Header>
-                <Segment attached data-cy="list-additives-weights-segment">
-                  <ListAdditivesRecipe
-                    recipe={summary}
-                    formState={formState}
-                    register={register}
-                    onRemove={removeAdditiveFromRecipe}
-                  />
-                  <ErrorMessage message name="additives" register={register} />
-                </Segment>
-
-                <Header block attached="top">Additives Calculation Tweaks</Header>
-                <Segment attached data-cy="additives-tweaks">
-                  <AdditivesCalculationTweaks
-                    formState={formState}
-                    register={register}
-                  />
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
-          )}
-
-          {!(currentUser) && (
-            <Grid.Row columns={2}>
-              <Grid.Column width={8}>
-                <Header block attached="top">6 - Select Additives</Header>
-                <LoginToCreatePostCTA
-                  cta="create and manage your list of Soap Additives"
-                  data-cy="login-for-additives"
+          <Grid.Row columns={2}>
+            <Grid.Column width={8}>
+              <Header block attached="top">6 - Select Additives</Header>
+              <Segment attached>
+                <ListAdditivesSelector
+                  additives={additives}
+                  onAddedAdditive={addAdditiveToRecipe}
+                  onRefresh={refetchAdditives}
                 />
-              </Grid.Column>
+              </Segment>
+            </Grid.Column>
 
-              <Grid.Column width={8}>
-                <Header block attached="top">Additives Calculation Tweaks</Header>
-                <Segment attached data-cy="additives-tweaks">
-                  <AdditivesCalculationTweaks
-                    formState={formState}
-                    register={register}
-                  />
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
-          )}
+            <Grid.Column width={8}>
+              <Header block attached="top">Recipe Additives</Header>
+              <Segment attached data-cy="list-additives-weights-segment">
+                <ListAdditivesRecipe
+                  recipe={summary}
+                  formState={formState}
+                  register={register}
+                  onRemove={removeAdditiveFromRecipe}
+                />
+                <ErrorMessage message name="additives" register={register} />
+              </Segment>
+
+              <Header block attached="top">Additives Calculation Tweaks</Header>
+              <Segment attached data-cy="additives-tweaks">
+                <AdditivesCalculationTweaks
+                  formState={formState}
+                  register={register}
+                />
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
 
           <Grid.Row columns={2}>
             <Grid.Column width={8}>
@@ -246,16 +215,6 @@ export default function SoapCalculator({
               <RowColumn>
                 <Header>Want to save your Recipe?</Header>
                 <Description register={register} />
-              </RowColumn>
-
-              <RowColumn>
-                <Header>Recipe Image</Header>
-                <RecipeImage recipe={recipe} onSetImage={handleSetImage} />
-              </RowColumn>
-
-              <RowColumn>
-                <Header>Recipe Visibility</Header>
-                <Visibility register={register} />
               </RowColumn>
 
               <RowColumn>
@@ -345,10 +304,6 @@ export default function SoapCalculator({
     onPrint(printRecipe, { preview: true });
   }
 
-  function handleSetImage({ recipeImage, recipeImageSizeData }) {
-    setImageData({ recipeImage, recipeImageSizeData });
-  }
-
   function recipeToFormPayload() {
     if (recipe) {
       return {
@@ -376,8 +331,7 @@ export default function SoapCalculator({
   function formValuesToRecipePayload(formValues, oilsInput) {
     // eslint-disable-next-line no-unused-vars
     const { display, ...rest } = recipeSummary(formValues, oilsInput);
-    const { name, description, notes, visibility, oils: recipeOils, additives: recipeAddtives, ...settings } = formValues;
-    const { recipeImage, recipeImageSizeData } = imageData;
+    const { name, description, notes, oils: recipeOils, additives: recipeAddtives, ...settings } = formValues;
 
     const additivesToSave = _.map(recipeAddtives, ({ id, weight }) => ({ id, weight }));
     const oilsToSave = _.map(recipeOils, ({ id, weight }) => ({ id, weight }));
@@ -387,14 +341,11 @@ export default function SoapCalculator({
       description,
       notes,
       summary: rest,
-      visibility,
       settings: {
         ...settings,
         additives: additivesToSave,
         oils: oilsToSave
-      },
-      recipeImage,
-      recipeImageSizeData
+      }
     };
   }
 

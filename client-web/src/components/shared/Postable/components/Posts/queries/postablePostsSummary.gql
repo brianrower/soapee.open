@@ -1,5 +1,0 @@
-query postablePostsSummary($postable: PostableInput!) {
-  postablePostsSummary(postable: $postable) {
-    count
-  }
-}

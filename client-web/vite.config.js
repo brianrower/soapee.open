@@ -1,15 +1,16 @@
 import path from 'path';
 
 import react from '@vitejs/plugin-react';
-import graphql from '@rollup/plugin-graphql';
 import VitePluginHtmlEnv from 'vite-plugin-html-env';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 
 export default function({ command, mode }) {
   const building = command === 'build';
   const serving = command === 'serve';
   const stating = mode === 'stats';
+  const standalone = mode === 'standalone';
 
   if (building) {
     // helps with dev only code elimination during builds
@@ -17,22 +18,20 @@ export default function({ command, mode }) {
   }
 
   return {
+    base: './',
     plugins: [
       VitePluginHtmlEnv(),
-      graphql(),
       serving && react(),
-      building && !(stating) && viteCompression(),
+      building && !(stating) && !(standalone) && viteCompression(),
+      standalone && viteSingleFile(),
       stating && visualizer()
     ],
     resolve: {
       alias: {
-        client: path.resolve(__dirname, './src/client'),
-        cache: path.resolve(__dirname, './src/cache'),
+        data: path.resolve(__dirname, './src/data'),
         components: path.resolve(__dirname, './src/components'),
         hooks: path.resolve(__dirname, './src/hooks'),
-        queries: path.resolve(__dirname, './src/queries'),
         services: path.resolve(__dirname, './src/services'),
-        schemas: path.resolve(__dirname, './src/schemas'),
         styles: path.resolve(__dirname, './src/styles')
       }
     },
@@ -50,13 +49,24 @@ export default function({ command, mode }) {
     server: {
       host: '0.0.0.0',
       hmr: {
-        port: 5000,
+        port: 5001,
         path: 'vite-hmr'
       }
     },
     build: {
       outDir: 'build',
-      brotliSize: false
+      brotliSize: false,
+      ...(standalone && {
+        assetsInlineLimit: 100000000,
+        chunkSizeWarningLimit: 100000000,
+        cssCodeSplit: false,
+        rollupOptions: {
+          output: {
+            inlineDynamicImports: true,
+            manualChunks: undefined
+          }
+        }
+      })
     },
     clearScreen: false
   };

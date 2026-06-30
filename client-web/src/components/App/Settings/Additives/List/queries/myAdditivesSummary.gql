@@ -1,5 +1,0 @@
-query myAdditivesSummary($search: AdditiveSearchInput) {
-  additivesSummary(search: $search) {
-    count
-  }
-}

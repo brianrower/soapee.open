@@ -4,13 +4,12 @@ import PropTypes from 'prop-types';
 import { Button, Input, Message, Table } from 'semantic-ui-react';
 import { useCreation } from 'ahooks';
 
-import client from 'client';
 import useEventDataValue from 'hooks/useEventDataValue';
+
+import { createAdditive } from 'services/additivesStore';
 
 import LinkText from 'components/shared/LinkText';
 import TooltipQuestion from 'components/shared/TooltipQuestion';
-
-import createAdditiveMutation from './queries/createAdditive.gql';
 
 import './style.styl';
 
@@ -62,15 +61,9 @@ export default function ListAdditivesSelector({ additives, onAddedAdditive, onRe
   );
 
   function handleCreateAdditive(name) {
-    return client
-      .mutate({
-        mutation: createAdditiveMutation,
-        variables: { input: { name } }
-      })
-      .then(() => {
-        setAdditiveValue('');
-        return onRefresh();
-      });
+    createAdditive({ name });
+    setAdditiveValue('');
+    return onRefresh();
   }
 }
 

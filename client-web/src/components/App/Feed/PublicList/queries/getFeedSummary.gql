@@ -1,5 +1,0 @@
-query getFeedSummary {
-  getFeedSummary {
-    count
-  }
-}

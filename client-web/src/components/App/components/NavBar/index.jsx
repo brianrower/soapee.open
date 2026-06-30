@@ -1,19 +1,8 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useHistory } from 'react-router-dom';
-import { Container, Icon, Menu, Dropdown, Header } from 'semantic-ui-react';
+import { Link, NavLink } from 'react-router-dom';
+import { Container, Icon, Menu, Header } from 'semantic-ui-react';
 
-import client from 'client';
-
-import useAuthenticated from 'hooks/useAuthenticated';
-import useCurrentUser from 'hooks/useCurrentUser';
 import useMedia, { mobile } from 'hooks/useMedia';
-
-import { clearAuthToken } from 'services/token';
-import { resetAuthenticated } from 'services/auth';
-
-import Avatar from 'components/shared/Avatar';
-
-import Notifications from '../Notifications';
 
 import './navBar.styl';
 
@@ -40,10 +29,7 @@ const NavBarDesktop = () => (
       </Link>
     </Menu.Item>
 
-    <LeftMenuItems />
-    <Menu.Menu position="right">
-      <RightMenuItems />
-    </Menu.Menu>
+    <MenuItems />
   </Menu>
 );
 
@@ -68,8 +54,7 @@ function NavBarMobile() {
 
       {visible && (
         <Menu inverted className="mobile-dropdown" color="grey" vertical fluid>
-          <LeftMenuItems />
-          <RightMenuItems />
+          <MenuItems />
         </Menu>
       )}
     </>
@@ -82,57 +67,9 @@ function NavBarMobile() {
   }
 }
 
-const LeftMenuItems = () => (
+const MenuItems = () => (
   <>
-    <Menu.Item as={NavLink} name="Home" exact to="/" />
     <Menu.Item as={NavLink} name="Calculator" to="/calculator" />
     <Menu.Item as={NavLink} name="Recipes" to="/recipes" />
-    <Menu.Item as={NavLink} name="Oils" to="/oils" />
-    <Menu.Item as={NavLink} name="Feed" to="/feed" />
-    <Menu.Item as={NavLink} name="Forums" to="/forums/home" />
   </>
 );
-
-const RightMenuItems = () => {
-  const auth = useAuthenticated();
-
-  if (auth) {
-    return <UserMenu />;
-  } else {
-    return <Menu.Item as={NavLink} name="Login" to="/auth/login" data-cy="navlink-login" />;
-  }
-};
-
-function UserMenu() {
-  const currentUser = useCurrentUser();
-  const history = useHistory();
-
-  return (currentUser && (
-    <div className="user-menu" data-cy="user-menu">
-      <Menu secondary>
-        <Menu.Item>
-          <Notifications />
-        </Menu.Item>
-
-        <Menu.Item className="user-menu-main-item">
-          <Dropdown floating trigger={<Avatar user={currentUser} size="micro" data-cy="user-menu-item" />}>
-            <Dropdown.Menu>
-              <Menu.Item as={NavLink} name="Profile" to="/settings" />
-              <Dropdown.Divider />
-              <Menu.Item as="a" name="Logout" onClick={logout} data-cy="logout" />
-            </Dropdown.Menu>
-          </Dropdown>
-        </Menu.Item>
-      </Menu>
-    </div>
-  )) || null;
-
-  //
-
-  function logout() {
-    clearAuthToken();
-    resetAuthenticated();
-    history.replace('/');
-    return client.resetStore();
-  }
-}

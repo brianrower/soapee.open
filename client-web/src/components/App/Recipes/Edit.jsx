@@ -1,32 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { Container } from 'semantic-ui-react';
-import { Route, Switch, useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { Container, Segment, Header, Button } from 'semantic-ui-react';
+import { Link, Route, Switch, useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import qs from 'qs';
 
-import client from 'client';
+import { getRecipe, updateRecipe, createRecipe } from 'services/recipesStore';
 
 import SoapCalculator from 'components/shared/SoapCalculator';
-import Section from 'components/shared/Section';
-import PrintTheRecipe from 'components/shared/PrintTheRecipe';
+import RecipePrint from 'components/shared/RecipeComponents/RecipePrint';
 
-import recipeQuery from './queries/recipe.gql';
-import createRecipeMutation from './queries/createRecipe.gql';
-import updateRecipeMutation from './queries/updateRecipe.gql';
-
+import usePrint from 'hooks/usePrint';
 
 export default function Edit({ oils }) {
   const history = useHistory();
   const { recipeId } = useParams();
   const { path, url } = useRouteMatch();
 
-  const { loading, data: { recipe } = {} } = useQuery(recipeQuery, {
-    variables: { id: recipeId },
-    fetchPolicy: 'network-only',
-    nextFetchPolicy: 'standby'
-  });
+  const recipe = getRecipe(recipeId);
 
   return (
     <div className="recipe-edit">
@@ -40,20 +31,25 @@ export default function Edit({ oils }) {
         </Route>
 
         <Route>
-          <Section loading={loading}>
-            {recipe && (
-              <Container className="view-page">
-                <SoapCalculator
-                  canSaveAsCopy
-                  oils={oils}
-                  recipe={recipe}
-                  onSave={updateTheRecipe}
-                  onSaveAsCopy={createTheRecipe}
-                  onPrint={handlePrint}
-                />
-              </Container>
-            )}
-          </Section>
+          {recipe ? (
+            <Container className="view-page">
+              <SoapCalculator
+                canSaveAsCopy
+                oils={oils}
+                recipe={recipe}
+                onSave={updateTheRecipe}
+                onSaveAsCopy={createTheRecipe}
+                onPrint={handlePrint}
+              />
+            </Container>
+          ) : (
+            <Container className="view-page">
+              <Segment placeholder textAlign="center">
+                <Header icon>Recipe not found.</Header>
+                <Button primary as={Link} to="/recipes" content="Back to Recipes" />
+              </Segment>
+            </Container>
+          )}
         </Route>
       </Switch>
     </div>
@@ -66,29 +62,33 @@ export default function Edit({ oils }) {
   }
 
   function updateTheRecipe(updatedRecipe) {
-    return client
-      .mutate({
-        mutation: updateRecipeMutation,
-        variables: {
-          id: recipeId,
-          recipe: updatedRecipe
-        }
-      })
-      .then(() => history.push(`/recipes/${recipeId}`));
+    updateRecipe(recipeId, updatedRecipe);
+
+    return Promise.resolve(history.push(`/recipes/${recipeId}`));
   }
 
   function createTheRecipe(saveAsRecipe) {
-    return client
-      .mutate({
-        mutation: createRecipeMutation,
-        variables: {
-          recipe: saveAsRecipe
-        }
-      })
-      .then(({ data: { createRecipe } }) => history.push(`/recipes/${createRecipe.id}`));
+    const saved = createRecipe(saveAsRecipe);
+
+    return Promise.resolve(history.push(`/recipes/${saved.id}`));
   }
 }
 
 Edit.propTypes = {
+  oils: PropTypes.array.isRequired
+};
+
+function PrintTheRecipe({ recipe, oils }) {
+  usePrint({ recipe });
+
+  return recipe ? <RecipePrint recipe={recipe} oils={oils} /> : null;
+}
+
+PrintTheRecipe.defaultProps = {
+  recipe: null
+};
+
+PrintTheRecipe.propTypes = {
+  recipe: PropTypes.object,
   oils: PropTypes.array.isRequired
 };

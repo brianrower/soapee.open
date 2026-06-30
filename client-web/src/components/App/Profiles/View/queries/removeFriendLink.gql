@@ -1,5 +1,0 @@
-mutation removeFriendLink($toUserId: ID!) {
-  removeFriendLink(toUserId: $toUserId) {
-    id
-  }
-}

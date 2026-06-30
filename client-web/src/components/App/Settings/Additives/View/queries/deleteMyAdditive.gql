@@ -1,5 +1,0 @@
-mutation deleteMyAdditive($id: ID!) {
-  deleteAdditive(id: $id) {
-    id
-  }
-}

@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 
 import useRecipeToOilsAdditivesAndSummary from 'hooks/useRecipeToOilsAdditivesAndSummary';
 
-import UserInfo from 'components/shared/UserInfo';
 import TimeAgo, { updatedAgo } from 'components/shared/TimeAgo';
 import SubTitle from 'components/shared/SubTitle';
 
@@ -42,12 +41,10 @@ function Heading({ recipe }) {
         {_.get(recipe, 'name')}
       </Header.Content>
 
-      {recipe.user && (
+      {recipe.createdAt && (
         <Header.Subheader>
           <SubTitle>
             <div className="post-info">
-              Recipe by &nbsp;
-              <UserInfo user={recipe.user} />&nbsp;
               <TimeAgo date={recipe.createdAt} />&nbsp;
               <TimeAgo
                 date={recipe.updatedAt}

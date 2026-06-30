@@ -1,23 +1,17 @@
-import { useQuery } from '@apollo/client';
-import { useUpdateEffect } from 'ahooks';
+import { useCallback, useState } from 'react';
 
-import useCurrentUser from 'hooks/useCurrentUser';
-
-import additivesQuery from './additives.gql';
+import { listAdditives } from 'services/additivesStore';
 
 export default function useMyAdditives() {
-  const { loading, data: { additives } = {}, refetch } = useQuery(additivesQuery, {
-    fetchPolicy: 'cache-first'
-  });
+  const [additives, setAdditives] = useState(listAdditives);
 
-  const currentUser = useCurrentUser();
+  const refetch = useCallback(() => {
+    const next = listAdditives();
 
-  useUpdateEffect(() => {
-    if (currentUser) {
-      refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+    setAdditives(next);
 
-  return [additives, loading, refetch];
+    return next;
+  }, []);
+
+  return [additives, false, refetch];
 }
