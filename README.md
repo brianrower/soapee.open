@@ -35,6 +35,21 @@ yarn build
 yarn lint
 ```
 
+## Offline / double-clickable build
+
+```sh
+yarn build:standalone     # from root, or `yarn build:standalone` inside client-web
+```
+
+This produces a `client-web/build/` folder whose `index.html` you can open by
+**double-clicking it** (no web server needed) — the app's JS/CSS are inlined and
+routing is hash-based so it runs from the `file://` protocol. Keep the folder
+intact: `index.html` needs the sibling `tinymce/` and `assets/` folders beside
+it. To share it, zip the whole `build/` folder.
+
+The regular `yarn build` produces a conventional multi-file build that is
+smaller and better suited to hosting on a static web server.
+
 ## Data & storage
 
 - **Oils** — static data in `client-web/src/data/oils.json`, loaded by `hooks/useOils`.

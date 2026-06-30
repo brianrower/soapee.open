@@ -4,11 +4,13 @@ import react from '@vitejs/plugin-react';
 import VitePluginHtmlEnv from 'vite-plugin-html-env';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 
 export default function({ command, mode }) {
   const building = command === 'build';
   const serving = command === 'serve';
   const stating = mode === 'stats';
+  const standalone = mode === 'standalone';
 
   if (building) {
     // helps with dev only code elimination during builds
@@ -16,10 +18,12 @@ export default function({ command, mode }) {
   }
 
   return {
+    base: './',
     plugins: [
       VitePluginHtmlEnv(),
       serving && react(),
-      building && !(stating) && viteCompression(),
+      building && !(stating) && !(standalone) && viteCompression(),
+      standalone && viteSingleFile(),
       stating && visualizer()
     ],
     resolve: {
@@ -51,7 +55,18 @@ export default function({ command, mode }) {
     },
     build: {
       outDir: 'build',
-      brotliSize: false
+      brotliSize: false,
+      ...(standalone && {
+        assetsInlineLimit: 100000000,
+        chunkSizeWarningLimit: 100000000,
+        cssCodeSplit: false,
+        rollupOptions: {
+          output: {
+            inlineDynamicImports: true,
+            manualChunks: undefined
+          }
+        }
+      })
     },
     clearScreen: false
   };

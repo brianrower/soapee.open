@@ -7,6 +7,7 @@
     "install:client": "yarn --cwd client-web install",
     "dev": "yarn --cwd client-web start",
     "build": "yarn --cwd client-web build",
+    "build:standalone": "yarn --cwd client-web build:standalone",
     "lint": "yarn --cwd client-web lint"
   }
 }

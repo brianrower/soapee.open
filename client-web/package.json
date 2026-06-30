@@ -7,6 +7,7 @@
     "start": "concurrently vite yarn:sleep",
     "start:build:watch": "concurrently --restart-tries 5 --restart-after 5000 \"vite build --mode development --watch\" \"vite preview --port 3000\" yarn:sleep",
     "build": "vite build",
+    "build:standalone": "vite build --mode standalone && node -e \"const fs=require('fs'),p='build/assets';fs.existsSync(p)&&fs.readdirSync(p).forEach(f=>/\\.(js|css)$/.test(f)&&fs.unlinkSync(p+'/'+f))\"",
     "lint": "yarn eslint . --ext js,jsx",
     "sleep": "sleep 99999999"
   },
@@ -56,7 +57,8 @@
     "stylus": "0.55.0",
     "vite": "2.7.2",
     "vite-plugin-compression": "0.3.6",
-    "vite-plugin-html-env": "1.0.3"
+    "vite-plugin-html-env": "1.0.3",
+    "vite-plugin-singlefile": "^0.7.2"
   },
   "engines": {
     "node": ">=12 < 13"
